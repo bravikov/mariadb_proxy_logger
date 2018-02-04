@@ -7,7 +7,7 @@ using boost::asio::ip::tcp;
 class Proxy
 {
 public:
-    Proxy(tcp::socket socket, boost::asio::io_service &ioService);
+    Proxy(tcp::socket* socket, boost::asio::io_service &ioService);
 
     void start();
 
@@ -17,7 +17,7 @@ private:
     void writeServer(const std::size_t& length);
     void writeClient(const std::size_t& length);
 
-    tcp::socket m_serverSocket;
+    tcp::socket* m_serverSocket;
     tcp::socket m_clientSocket;
     tcp::endpoint m_clientEndpoint;
 

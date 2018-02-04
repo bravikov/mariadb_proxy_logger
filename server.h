@@ -17,7 +17,6 @@ private:
 
     boost::asio::io_service& m_ioService;
     tcp::acceptor m_acceptor;
-    tcp::socket m_socket;
 };
 
 #endif // SERVER_H

@@ -7,24 +7,28 @@ Server::Server(
     const tcp::endpoint &endpoint
 ):
     m_ioService(ioService),
-    m_acceptor(ioService, endpoint),
-    m_socket(ioService)
+    m_acceptor(ioService, endpoint)
 {
     accept();
 }
 
 void Server::accept()
 {
+    // Здесь происходит утечка памяти
+    tcp::socket* socket = new tcp::socket(m_ioService);
+
     m_acceptor.async_accept(
-        m_socket,
-        [this](boost::system::error_code error) {
+        *socket,
+        [this, socket](boost::system::error_code error) {
             std::cout << "m_acceptor.async_accept" << std::endl;
 
             if (error) {
+                std::cerr << error << " " << error.message() << std::endl;
+                delete socket;
                 return;
             }
 
-            auto proxy = new Proxy(std::move(m_socket), m_ioService);
+            auto proxy = new Proxy(socket, m_ioService);
             proxy->start();
 
             accept();

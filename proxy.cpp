@@ -1,9 +1,9 @@
 #include "proxy.h"
 #include <iostream>
 
-Proxy::Proxy(tcp::socket socket, boost::asio::io_service &ioService)
+Proxy::Proxy(tcp::socket *socket, boost::asio::io_service &ioService)
 :
-    m_serverSocket(std::move(socket)),
+    m_serverSocket(socket),
     m_clientSocket(ioService),
     m_clientEndpoint(boost::asio::ip::address::from_string("127.0.0.1"), 3306)
 {
@@ -44,7 +44,7 @@ void Proxy::writeClient(const std::size_t &length)
 
 void Proxy::readServer()
 {
-    m_serverSocket.async_read_some(
+    m_serverSocket->async_read_some(
         boost::asio::buffer(m_serverData, max_length),
         [this](boost::system::error_code error, std::size_t length) {
             std::cout << "m_serverSocket.async_read_some" << std::endl;
@@ -67,7 +67,7 @@ void Proxy::readServer()
 
 void Proxy::writeServer(const std::size_t &length)
 {
-    m_serverSocket.async_write_some(
+    m_serverSocket->async_write_some(
         boost::asio::buffer(m_clientData, length),
         [this](boost::system::error_code error, std::size_t /*length*/) {
             if (error) {
