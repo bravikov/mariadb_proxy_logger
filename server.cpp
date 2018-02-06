@@ -20,8 +20,6 @@ void Server::accept()
     m_acceptor.async_accept(
         *socket,
         [this, socket](boost::system::error_code error) {
-            std::cout << "m_acceptor.async_accept" << std::endl;
-
             if (error) {
                 std::cerr << error << " " << error.message() << std::endl;
                 delete socket;

@@ -14,7 +14,6 @@ void Proxy::start()
     m_clientSocket.async_connect(
         m_clientEndpoint,
         [this](const boost::system::error_code& error) {
-            std::cout << "m_clientSocket.async_connect" << std::endl;
             if (error) {
                 std::cerr << error << " " << error.message() << std::endl;
                 return;
@@ -47,18 +46,18 @@ void Proxy::readServer()
     m_serverSocket->async_read_some(
         boost::asio::buffer(m_serverData, max_length),
         [this](boost::system::error_code error, std::size_t length) {
-            std::cout << "m_serverSocket.async_read_some" << std::endl;
-
             if (error) {
                 std::cerr << error << " " << error.message() << std::endl;
                 return;
             }
 
-            for (decltype(length) i = 0; i < length; i++) {
-                std::cout << m_serverData[i];
+            if (!m_parser.addData(m_serverData, length)) {
+                return;
             }
 
-            std::cout << std::endl;
+            if (m_parser.queryReady()) {
+                std::cout << m_parser.getQuery() << std::endl;
+            }
 
             writeClient(length);
         }
@@ -85,18 +84,10 @@ void Proxy::readClient()
     m_clientSocket.async_read_some(
         boost::asio::buffer(m_clientData, max_length),
         [this](boost::system::error_code error, std::size_t length) {
-            std::cout << "m_clientSocket.async_read_some" << std::endl;
-
             if (error) {
                 std::cerr << error << " " << error.message() << std::endl;
                 return;
             }
-
-            for (decltype(length) i = 0; i < length; i++) {
-                std::cout << m_clientData[i];
-            }
-
-            std::cout << std::endl;
 
             writeServer(length);
         }

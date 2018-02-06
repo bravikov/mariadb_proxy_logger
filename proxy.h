@@ -1,6 +1,8 @@
 #ifndef PROXY_H
 #define PROXY_H
 
+#include "parser.h"
+
 #include <boost/asio.hpp>
 using boost::asio::ip::tcp;
 
@@ -20,6 +22,8 @@ private:
     tcp::socket* m_serverSocket;
     tcp::socket m_clientSocket;
     tcp::endpoint m_clientEndpoint;
+
+    Parser m_parser;
 
     enum { max_length = 1024 };
     char m_serverData[max_length];
