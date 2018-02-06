@@ -4,6 +4,7 @@ SOURCES += \
     proxy.cpp \
     packet_header.cpp \
     parser.cpp \
+    options.cpp \
 # SOURCES
 
 HEADERS += \
@@ -11,4 +12,5 @@ HEADERS += \
     proxy.h \
     packet_header.h \
     parser.h \
+    options.h \
 # HEADERS
