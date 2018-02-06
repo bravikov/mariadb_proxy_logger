@@ -33,9 +33,8 @@ int main(int argc, char* argv[])
         Options options{argc, argv};
 
         boost::asio::io_service ioService;
-        tcp::endpoint endpoint(tcp::v4(), options.port());
 
-        Server server{ioService, endpoint};
+        Server server{ioService, options};
 
         ioService.run();
     }

@@ -9,7 +9,12 @@ using boost::asio::ip::tcp;
 class Proxy
 {
 public:
-    Proxy(tcp::socket* socket, boost::asio::io_service &ioService);
+    Proxy(
+        tcp::socket* socket,
+        boost::asio::io_service& ioService,
+        const std::string& databaseAddress,
+        const uint16_t& databasePort
+    );
 
     void start();
 

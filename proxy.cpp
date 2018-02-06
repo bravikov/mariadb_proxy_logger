@@ -1,11 +1,18 @@
 #include "proxy.h"
 #include <iostream>
 
-Proxy::Proxy(tcp::socket *socket, boost::asio::io_service &ioService)
-:
+Proxy::Proxy(
+    tcp::socket* socket,
+    boost::asio::io_service& ioService,
+    const std::string& databaseAddress,
+    const uint16_t& databasePort
+):
     m_serverSocket(socket),
     m_clientSocket(ioService),
-    m_clientEndpoint(boost::asio::ip::address::from_string("127.0.0.1"), 3306)
+    m_clientEndpoint(
+        boost::asio::ip::address::from_string(databaseAddress),
+        databasePort
+    )
 {
 }
 
