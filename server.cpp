@@ -13,18 +13,21 @@ Server::Server(boost::asio::io_service &ioService, const Options &options):
 
 void Server::accept()
 {
-    // Здесь происходит утечка памяти
+    // TODO: Здесь происходит утечка памяти. Устранить.
     tcp::socket* socket = new tcp::socket(m_ioService);
 
     m_acceptor.async_accept(
         *socket,
         [this, socket](boost::system::error_code error) {
             if (error) {
-                std::cerr << error << " " << error.message() << std::endl;
+                std::cerr
+                    << "Ошибка при установке соединения с клиентом: "
+                    << error << " " << error.message() << std::endl;
                 delete socket;
                 return;
             }
 
+            // TODO: Здесь происходит утечка памяти. Устранить.
             auto proxy = new Proxy(
                 socket,
                 m_ioService,

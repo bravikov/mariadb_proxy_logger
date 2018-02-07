@@ -36,10 +36,11 @@ void Proxy::writeClient(const std::size_t &length)
 {
     m_clientSocket.async_write_some(
         boost::asio::buffer(m_serverData, length),
-        [this](boost::system::error_code error, std::size_t /*length*/)
-        {
+        [this](boost::system::error_code error, std::size_t /*length*/) {
             if (error) {
-                std::cerr << error << " " << error.message() << std::endl;
+                std::cerr
+                    << "Ошибка при передачи данных к СУБД: "
+                    << error << " " << error.message() << std::endl;
                 return;
             }
 
@@ -54,7 +55,9 @@ void Proxy::readServer()
         boost::asio::buffer(m_serverData, max_length),
         [this](boost::system::error_code error, std::size_t length) {
             if (error) {
-                std::cerr << error << " " << error.message() << std::endl;
+                std::cerr
+                    << "Ошибка при получении данных от клиента: "
+                    << error << " " << error.message() << std::endl;
                 return;
             }
 
@@ -77,7 +80,9 @@ void Proxy::writeServer(const std::size_t &length)
         boost::asio::buffer(m_clientData, length),
         [this](boost::system::error_code error, std::size_t /*length*/) {
             if (error) {
-                std::cerr << error << " " << error.message() << std::endl;
+                std::cerr
+                    << "Ошибка при передачи данных к клиенту: "
+                    << error << " " << error.message() << std::endl;
                 return;
             }
 
@@ -92,7 +97,9 @@ void Proxy::readClient()
         boost::asio::buffer(m_clientData, max_length),
         [this](boost::system::error_code error, std::size_t length) {
             if (error) {
-                std::cerr << error << " " << error.message() << std::endl;
+                std::cerr
+                    << "Ошибка при получении данных от СУБД: "
+                    << error << " " << error.message() << std::endl;
                 return;
             }
 
